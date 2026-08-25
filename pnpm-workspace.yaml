@@ -1,0 +1,6 @@
+allowBuilds:
+  unrs-resolver: set this to true or false
+# unrs-resolver ships prebuilt native bindings; its postinstall just links the
+# right one. Lint-only dep (eslint-config-next → eslint-import-resolver-typescript).
+onlyBuiltDependencies:
+  - unrs-resolver

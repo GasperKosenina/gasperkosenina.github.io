@@ -1,7 +1,351 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+:root {
+  --ink: #1a1a18;
+  --paper: #fbfaf8;
+  --pad-x: 64px;
+  /* Mockup card is 1180px wide; centre on anything wider. */
+  --gutter: max(var(--pad-x), (100% - 1180px) / 2);
+}
 
+* {
+  box-sizing: border-box;
+}
+
+/* Chrome on Android will otherwise auto-invert the page and destroy the
+   ink/paper masthead. There is no dark variant to fall back to. */
 html {
-  @apply scroll-smooth;
+  color-scheme: only light;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+/* ── shared type ─────────────────────────────────────────────── */
+
+.cv-label {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Title + trailing detail on one baseline, detail pinned right. */
+.cv-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.cv-line h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.cv-period {
+  font-size: 12.5px;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.55);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ── masthead ────────────────────────────────────────────────── */
+
+.cv-masthead {
+  padding: 56px var(--gutter) 52px;
+  background: var(--ink);
+  color: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+.cv-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.cv-dim {
+  color: rgba(251, 250, 248, 0.6);
+}
+
+.cv-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px 22px;
+  font-size: 13.5px;
+  line-height: 1;
+}
+
+.cv-links a,
+.cv-links button {
+  position: relative;
+  border-bottom: 1px solid rgba(251, 250, 248, 0.3);
+  padding-bottom: 2px;
+}
+
+/* 16.5px of visible link, 44.5px of tappable target. Nothing moves. */
+.cv-links a::before,
+.cv-links button::before {
+  content: "";
+  position: absolute;
+  inset: -14px 0;
+}
+
+.cv-links a:hover,
+.cv-links button:hover {
+  border-bottom-color: var(--paper);
+}
+
+.cv-links button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border-width: 0 0 1px;
+  border-style: solid;
+  padding: 0 0 2px;
+  cursor: pointer;
+}
+
+.cv-masthead h1 {
+  margin: 26px 0 0;
+  font-size: clamp(46px, 10.5vw, 122px);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+}
+
+/* Measure-capped so the bio does not run the full 1180px. */
+.cv-lede {
+  margin: 36px 0 0;
+  max-width: 600px;
+  font-size: 19px;
+  line-height: 1.55;
+  color: rgba(251, 250, 248, 0.72);
+  text-wrap: pretty;
+}
+
+/* ── body ────────────────────────────────────────────────────── */
+
+.cv-body {
+  padding: 52px var(--gutter) 60px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+}
+
+.cv-col {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.cv-shead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.55);
+  padding-bottom: 9px;
+}
+
+.cv-rows > * {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.cv-rows > *:last-child {
+  border-bottom: 0;
+}
+
+.cv-project {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 14px;
+  padding: 18px 0;
+  align-items: baseline;
+}
+
+.cv-num {
+  font-size: 12px;
+  line-height: 1.25;
+  color: rgba(0, 0, 0, 0.55);
+  font-variant-numeric: tabular-nums;
+}
+
+.cv-project p,
+.cv-entry p {
+  margin: 6px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* The project name is the link. Arrow sits outside the anchor so the
+   underline tracks the name only. */
+.cv-project .cv-line a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(0, 0, 0, 0.3);
+  text-underline-offset: 4px;
+}
+
+.cv-project .cv-line a:hover {
+  text-decoration-color: var(--ink);
+}
+
+.cv-project .cv-line h3::after {
+  /* \FE0E forces the text glyph; without it Windows and Android Chrome pick
+     the colour emoji. The / "" stops SRs announcing "north east arrow". */
+  content: " \2197\FE0E" / "";
+  font-variant-emoji: text;
+  font-size: 0.72em;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.cv-stack {
+  margin-top: 7px;
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.cv-entry {
+  padding: 16px 0;
+}
+
+.cv-entry .cv-line h3 {
+  font-size: 17px;
+}
+
+.cv-entry p {
+  margin-top: 5px;
+  line-height: 1.55;
+  color: rgba(0, 0, 0, 0.58);
+}
+
+/* Only the company name is the link, not the descriptor after it. */
+.cv-entry p a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: rgba(0, 0, 0, 0.3);
+  text-underline-offset: 3px;
+}
+
+.cv-entry p a:hover {
+  text-decoration-color: var(--ink);
+}
+
+.cv-edu {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+}
+
+.cv-edu h3 {
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.cv-org {
+  margin-top: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+/* ── narrow ──────────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  :root {
+    --pad-x: 24px;
+  }
+
+  .cv-masthead {
+    padding-top: 36px;
+    padding-bottom: 36px;
+  }
+
+  .cv-body {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .cv-body {
+    padding-top: 36px;
+  }
+
+  .cv-lede {
+    font-size: 17px;
+  }
+
+  .cv-project p,
+  .cv-entry p {
+    font-size: 15.5px;
+  }
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  /* Print the dark masthead rather than dropping it — this overrides Chrome's
+     "Background graphics" being off by default. */
+  html {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* An A4 page box is ~794px, which trips the 900px breakpoint. Undo it so the
+     PDF is the desktop layout, not the phone one. */
+  :root {
+    --pad-x: 40px;
+  }
+
+  .cv-body {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cv-body {
+    gap: 40px;
+  }
+
+  /* A button to make the PDF, inside the PDF. */
+  .cv-links button {
+    display: none;
+  }
+
+  .cv-project,
+  .cv-entry,
+  .cv-edu > div {
+    break-inside: avoid;
+  }
+
+  /* Don't strand a section label alone at the foot of page 1. */
+  .cv-shead {
+    break-after: avoid;
+  }
 }
